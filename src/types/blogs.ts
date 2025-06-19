@@ -1,6 +1,8 @@
+import { CommentData } from "./comment";
+
 export interface BlogsData {
-  id?: string;
+  id: string;
   title: string;
   content: string;
-  createdAt: string;
+  comments?: CommentData[];
 }

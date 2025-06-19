@@ -15,7 +15,7 @@ export const fetchBlogs = createAsyncThunk('blogs/fetchBlog', async () => {
 export const addBlog = createAsyncThunk(
   'blogs/addBlog',
   async (blog: Omit<BlogsData, 'id'>) => {
-    const postsCol = collection(db, 'blogs');
+    const postsCol = collection(db, 'Blogs');
     const blogData = await addDoc(postsCol, blog);
     return { id: blogData.id, ...blog };
   },
