@@ -16,10 +16,13 @@ export function attachSimpleThunk<
 ): void {
   builder
     .addCase(thunk.pending, (state) => {
-      (state as Draft<State>).loading = true;
-      (state as Draft<State>).error = null;
+      state.loading = true;
+      state.error = null;
     })
-    .addCase(thunk.fulfilled, onFulfilled)
+    .addCase(thunk.fulfilled, (state, action) => {
+      state.loading = false;
+      onFulfilled(state, action);
+    })
     .addCase(thunk.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || 'Error';

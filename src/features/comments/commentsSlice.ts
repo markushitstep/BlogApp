@@ -3,13 +3,13 @@ import { addComment, fetchCommentsByBlogId } from "./commentsThunk";
 import { CommentData } from "../../types/comment";
 
 interface CommentsState {
-  commentsByBlogId: Record<string, CommentData[]>;
+  comments: CommentData[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: CommentsState = {
-  commentsByBlogId: {},
+  comments: [],
   loading: false,
   error: null,
 };
@@ -26,8 +26,7 @@ const commentsSlice = createSlice({
       })
       .addCase(fetchCommentsByBlogId.fulfilled, (state, action) => {
         state.loading = false;
-        const { blogId, comments } = action.payload;
-        state.commentsByBlogId[blogId] = comments;
+        state.comments = action.payload;
       })
       .addCase(fetchCommentsByBlogId.rejected, (state, action) => {
         state.loading = false;
@@ -41,10 +40,10 @@ const commentsSlice = createSlice({
       .addCase(addComment.fulfilled, (state, action) => {
         state.loading = false;
         const comment = action.payload;
-        if (!state.commentsByBlogId[comment.blogId]) {
-          state.commentsByBlogId[comment.blogId] = [];
+        if (!state.comments) {
+          state.comments = [];
         }
-        state.commentsByBlogId[comment.blogId].push(comment);
+        state.comments.push(comment);
       })
       .addCase(addComment.rejected, (state, action) => {
         state.loading = false;
