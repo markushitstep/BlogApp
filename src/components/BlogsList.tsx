@@ -12,7 +12,7 @@ export const BlogsList = () => {
   }, [dispatch]);
 
   return (
-    <div className="grid gap-8 mt-4 px-8 w-full"
+    <div className="grid gap-4 mt-4 px-8 w-full"
       style={{ gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))" }}
     >
       {blogs.length > 0 

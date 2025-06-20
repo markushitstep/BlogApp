@@ -9,7 +9,7 @@ export const BlogItem = ({ blogData }: IProps) => {
   return (
     <NavLink
       to={`/blogs/${blogData.id}`}
-      className="block w-72 h-48 p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+       className="block w-68 h-48 p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
     >
       <h3 className="text-lg font-semibold mb-2 line-clamp-2">{blogData.title}</h3>
       <p
@@ -21,7 +21,7 @@ export const BlogItem = ({ blogData }: IProps) => {
           overflow: 'hidden',
         }}
       >
-        {blogData.content}
+        {blogData.text}
       </p>
     </NavLink>
   );
