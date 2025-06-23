@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { fetchBlogs } from '../features/blogs/blogsThunk';
 import { BlogComments } from './BlogComments';
 import { BlogsData } from '../types/blogs';
+import { ButtonPrimary } from './UI/buttons';
 
 export const BlogDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,12 +30,12 @@ export const BlogDetails = () => {
       <div className="w-full xs:w-3/4 lg:w-2/4 p-6 box-border overflow-hidden">
         <h1 className="text-3xl font-bold mb-6">{filteredBlog.title}</h1>
         <p className="text-gray-700 whitespace-pre-wrap break-words">{filteredBlog.text}</p>
-        <button
+        <ButtonPrimary 
           onClick={() => navigate(-1)}
-          className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className='mt-5 bg-blue-600 hover:bg-blue-700 text-white rounded'
         >
           Back
-        </button>
+        </ButtonPrimary>
       </div>
       <div className='w-full xs:w-3/4 lg:w-2/4'>
         <BlogComments blogId={id as string} />

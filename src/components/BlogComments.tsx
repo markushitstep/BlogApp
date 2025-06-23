@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { CommentData } from '../types/comment';
 import { addComment, fetchCommentsByBlogId } from '../features/comments/commentsThunk';
 import { toast } from 'react-toastify';
+import { ButtonPrimary } from './UI/buttons';
 
 const commentSchema = z.object({
   text: z.string().min(5, 'Комментарий не может быть пустым'),
@@ -78,13 +79,13 @@ export const BlogComments = ({
         />
         {errors.text && <p className="text-red-600 mt-1">{errors.text.message}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-3 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        <ButtonPrimary 
+          type='submit'
+          disabled={loading} 
+          className='mt-5 bg-blue-600 hover:bg-blue-700 text-white rounded transition'
         >
           {loading ? 'Submiting...' : 'Submit'}
-        </button>
+        </ButtonPrimary>
       </form>
     </div>
   );

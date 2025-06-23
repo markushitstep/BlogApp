@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { addBlog } from '../features/blogs/blogsThunk';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
+import { ButtonPrimary } from './UI/buttons';
 
 
 const blogSchema = z.object({
@@ -58,13 +59,13 @@ export const BlogForm = () => {
       />
       {errors.text && <p className="text-red-600 text-sm">{errors.text.message}</p>}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="mt-5 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50"
+      <ButtonPrimary 
+        type='submit'
+        disabled={loading} 
+        className='mt-5 bg-blue-600 hover:bg-blue-700 text-white rounded transition disabled:opacity-50'
       >
         {loading ? 'Saving...' : 'Create'}
-      </button>
+      </ButtonPrimary>
 
       {error && <p className="mt-3 text-red-600">{error}</p>}
     </form>
