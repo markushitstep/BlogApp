@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { NavItemType } from '../../types/navigation';
-import { ButtonSecondary } from '../UI/buttons';
+import { ButtonPrimary } from '../UI/buttons';
 
 interface IProps {
   navItem: NavItemType; 
@@ -12,16 +12,14 @@ const NavigationItem = ({
   const location = useLocation();
   const isActive = navItem.href === location.pathname;
 
-  const baseButtonClasses = 'border !rounded-2xl border-blue-400 bg-blue-100 transition';
-
   return (
     <>
-      <ButtonSecondary
+      <ButtonPrimary
         href={navItem.href}
-        className={` ${isActive ? 'bg-blue-600 text-white' : ''} ${baseButtonClasses}`}
+        className={` ${isActive ? '!border-gray-600 bg-gray-600 !text-white' : ''}`}
       >
         {navItem.name}
-      </ButtonSecondary>
+      </ButtonPrimary>
     </>
   );
 }
