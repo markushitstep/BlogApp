@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { addDoc, collection, doc, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { CommentData } from "../../types/comment";
 import { db } from "../../firebaseConfig";
 
@@ -22,5 +22,19 @@ export const addComment = createAsyncThunk(
     const commentsCol = collection(db, 'blogs', comment.blogId, 'comments');
     const docRef = await addDoc(commentsCol, { ...comment, createdAt: serverTimestamp() });
     return { id: docRef.id, ...comment, createdAt: new Date() };
+  }
+);
+
+interface IDeleteProps {
+  blogId: string;
+  commentId: string;
+}
+
+export const deleteComment = createAsyncThunk(
+  'comments/delete',
+  async ({ blogId, commentId }: IDeleteProps) => {
+    const commentsCol = doc(db, 'blogs', blogId, 'comments', commentId);
+    await deleteDoc(commentsCol);
+    return commentId;
   }
 );

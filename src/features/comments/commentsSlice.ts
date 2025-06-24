@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addComment, fetchCommentsByBlogId } from "./commentsThunk";
+import { addComment, deleteComment, fetchCommentsByBlogId } from "./commentsThunk";
 import { CommentData } from "../../types/comment";
 
 interface CommentsState {
@@ -33,6 +33,7 @@ const commentsSlice = createSlice({
         state.error = action.error.message || 'Error';
       })
 
+      ///ADD COMMENT
       .addCase(addComment.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -48,7 +49,21 @@ const commentsSlice = createSlice({
       .addCase(addComment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error';
-      });
+      })
+
+      ///DELETE COMMENT
+      .addCase(deleteComment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteComment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.comments = state.comments.filter((comment) => comment.id !== action.payload );
+      })
+      .addCase(deleteComment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error';
+      })
   },
 });
 
