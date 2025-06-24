@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { addDoc, collection, getDocs, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import { BlogsData } from '../../types/blogs';
 
@@ -37,5 +37,14 @@ export const addBlog = createAsyncThunk(
     const blogCol = collection(db, 'blogs');
     const blogData = await addDoc(blogCol, blog);
     return { id: blogData.id, ...blog };
+  },
+);
+
+export const deleteBlog = createAsyncThunk(
+  'blogs/deleteBlog',
+  async (blogId: string) => {
+    const blogCol = doc(db, 'blogs', blogId);
+    await deleteDoc(blogCol);
+    return blogId;
   },
 );

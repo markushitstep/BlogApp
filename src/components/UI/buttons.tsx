@@ -13,7 +13,7 @@ interface ButtonProps {
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   href?: string;
   targetBlank?: boolean;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent) => void;
   download?: boolean;
   children?: ReactNode;
 }
@@ -32,7 +32,7 @@ export const Button = ({
   download,
   onClick = () => {},
 }: ButtonProps) => {
-  const CLASSES = `relative h-auto inline-flex items-center justify-center rounded-3xl transition-colors ${fontSize} ${sizeClass} ${translate} ${className} `;
+  const CLASSES = `relative h-auto inline-flex items-center justify-center rounded-2xl transition-colors ${fontSize} ${sizeClass} ${translate} ${className} `;
 
   if (!!href) {
     return (
@@ -65,16 +65,7 @@ export const Button = ({
 export const ButtonPrimary = ({ className = '', ...args }: ButtonProps) => {
   return (
     <Button
-      className={`disabled:bg-opacity-70 ${className}`}
-      {...args}
-    />
-  );
-};
-
-export const ButtonSecondary = ({ className = '', ...args }: ButtonProps) => {
-  return (
-    <Button
-      className={`disabled:bg-opacity-70 ${className}`}
+      className={`disabled:bg-opacity-70 border border-gray-400 hover:bg-gray-400 text-black hover:text-white ${className}`}
       {...args}
     />
   );

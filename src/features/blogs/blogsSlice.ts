@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { BlogsData } from '../../types/blogs';
-import { addBlog, fetchBlogs } from './blogsThunk';
+import { addBlog, deleteBlog, fetchBlogs } from './blogsThunk';
 import { attachSimpleThunk } from '../../untils/redux/attachSimpleThunk';
 
 interface PostsState {
@@ -34,6 +34,15 @@ const postsSlice = createSlice({
       addBlog,
       (state, action) => {
         state.blogs = action.payload;
+      }
+    ); 
+    ///DELETE BLOGS
+    attachSimpleThunk<PostsState, string, string>(
+      builder,
+      deleteBlog,
+      (state, action) => {
+        state.blogs = state.blogs.filter(blog => blog.id !== action.payload);
+
       }
     ); 
   },
