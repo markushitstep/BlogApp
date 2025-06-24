@@ -46,7 +46,7 @@ export const BlogForm = () => {
       <input
         {...register('title')}
         id="title"
-        className={`w-full p-2 border rounded ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
+        className={`w-full py-2 px-4 border border-gray-400 rounded-2xl ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
       />
       {errors.title && <p className="text-red-600 text-sm">{errors.title.message}</p>}
 
@@ -55,14 +55,14 @@ export const BlogForm = () => {
         {...register('text')}
         id="content"
         rows={6}
-        className={`w-full p-2 border rounded ${errors.text ? 'border-red-500' : 'border-gray-300'}`}
+        className={`w-full py-2 px-4 border border-gray-400 rounded-2xl ${errors.text ? 'border-red-500' : 'border-gray-300'}`}
       />
       {errors.text && <p className="text-red-600 text-sm">{errors.text.message}</p>}
 
       <ButtonPrimary 
         type='submit'
         disabled={loading} 
-        className='mt-5 bg-blue-600 hover:bg-blue-700 text-white rounded transition disabled:opacity-50'
+        className='mt-5'
       >
         {loading ? 'Saving...' : 'Create'}
       </ButtonPrimary>

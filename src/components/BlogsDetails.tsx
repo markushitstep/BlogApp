@@ -32,7 +32,7 @@ export const BlogDetails = () => {
         <p className="text-gray-700 whitespace-pre-wrap break-words">{filteredBlog.text}</p>
         <ButtonPrimary 
           onClick={() => navigate(-1)}
-          className='mt-5 bg-blue-600 hover:bg-blue-700 text-white rounded'
+          className='mt-5'
         >
           Back
         </ButtonPrimary>
