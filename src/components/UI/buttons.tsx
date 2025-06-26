@@ -65,7 +65,16 @@ export const Button = ({
 export const ButtonPrimary = ({ className = '', ...args }: ButtonProps) => {
   return (
     <Button
-      className={`disabled:bg-opacity-70 border border-gray-400 hover:bg-gray-400 text-black hover:text-white ${className}`}
+      className={`disabled:bg-opacity-70 border focus:outline-0 border-gray-400 hover:bg-gray-400 text-black hover:text-white ${className}`}
+      {...args}
+    />
+  );
+};
+
+export const ButtonImage = ({ className = '', ...args }: ButtonProps) => {
+  return (
+    <Button
+      className={`disabled:bg-opacity-70 !p-0 focus:outline-0 bg-white ${className}`}
       {...args}
     />
   );
