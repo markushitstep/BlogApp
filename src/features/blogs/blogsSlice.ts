@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { BlogsData } from '../../types/blogs';
-import { addBlog, deleteBlog, fetchBlogs } from './blogsThunk';
+import { addBlog, deleteBlog, fetchBlogs, IUpdateTitleProps, IUpdateTextProps, updateTitleBlog, updateTextBlog } from './blogsThunk';
 import { attachSimpleThunk } from '../../untils/redux/attachSimpleThunk';
 
 interface PostsState {
@@ -34,6 +34,24 @@ const postsSlice = createSlice({
       addBlog,
       (state, action) => {
         state.blogs = action.payload;
+      }
+    );
+    ///UPDATE TITLE BLOG
+    attachSimpleThunk<PostsState,{ blogId: string, title: string}, IUpdateTitleProps>(
+      builder,
+      updateTitleBlog,
+      (state, action) => {
+        const { blogId, title } = action.payload;
+        state.blogs = state.blogs.map(blog => blog.id === blogId ? {...blog, title } : blog)
+      }
+    ); 
+    ///UPDATE TEXT BLOG
+    attachSimpleThunk<PostsState,{ blogId: string, text: string}, IUpdateTextProps>(
+      builder,
+      updateTextBlog,
+      (state, action) => {
+        const { blogId, text } = action.payload;
+        state.blogs = state.blogs.map(blog => blog.id === blogId ? {...blog, text } : blog)
       }
     ); 
     ///DELETE BLOGS

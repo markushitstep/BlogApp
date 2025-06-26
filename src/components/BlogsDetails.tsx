@@ -1,26 +1,106 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
-import { fetchBlogs } from '../features/blogs/blogsThunk';
+import { fetchBlogs, updateTextBlog, updateTitleBlog } from '../features/blogs/blogsThunk';
 import { BlogComments } from './BlogComments';
 import { BlogsData } from '../types/blogs';
-import { ButtonPrimary } from './UI/buttons';
+import { ButtonImage, ButtonPrimary } from './UI/buttons';
+import { useForm } from 'react-hook-form';
+import { PencilIcon, BookmarkIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { zodResolver } from '@hookform/resolvers/zod';
+import z from 'zod';
+import { toast } from 'react-toastify';
+
+const blogTitleSchema = z.object({
+  title: z.string().min(3, 'Минимум 3 символа'),
+});
+const blogTextSchema = z.object({
+  text: z.string().min(10, 'Минимум 10 символов'),
+});
+
+type BlogTitleData = z.infer<typeof blogTitleSchema>;
+type BlogTextData = z.infer<typeof blogTextSchema>;
 
 export const BlogDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector(state => state.blogs);
+  const { loading, blogs } = useAppSelector(state => state.blogs);
   const [filteredBlog, setFilteredBlog] = useState<BlogsData>();
+  const [isEditTitle, setIsEditTitle] = useState(false);
+  const [isEditText, setIsEditText] = useState(false);
+
+  const {
+    register: registerTitleEdit,
+    handleSubmit: handleSubmitTitleEdit,
+    setValue: setValueTitleEdit,
+    formState: { errors: errorsTitleEdit },
+  } = useForm<BlogTitleData>({
+    resolver: zodResolver(blogTitleSchema),
+  });
+
+  const {
+    register: registerTextEdit,
+    handleSubmit: handleSubmitTextEdit,
+    setValue: setValueTextEdit,
+    formState: { errors: errorsTextEdit },
+  } = useForm<BlogTextData>({
+    resolver: zodResolver(blogTextSchema),
+  });
+
+  const handleToggleEditTitle = () => setIsEditTitle(!isEditTitle);
+  const handleToggleEditText = () => setIsEditText(!isEditText);
+  
+  const handleEditTitle = () => {
+    if(filteredBlog){
+      handleToggleEditTitle();
+      setValueTitleEdit('title', filteredBlog?.title);
+    }
+  }
+
+  const handleEditText = () => {
+    if(filteredBlog){
+      handleToggleEditText();
+      setValueTextEdit('text', filteredBlog?.text);
+    }
+  }
+
+  const handleFetchEditTitle = async (data: BlogTitleData) => {
+    if(id){
+      const { title } = data;
+      await dispatch(updateTitleBlog({ blogId: id, title })).then((response) => {
+        if(response){
+          handleToggleEditTitle();
+          toast.success('Title updated');
+        }
+      })
+    }
+  } 
+
+  const handleFetchEditText = async (data: BlogTextData) => {
+    if(id){
+      const { text } = data;
+      await dispatch(updateTextBlog({ blogId: id, text })).then((response) => {
+        if(response){
+          handleToggleEditText();
+          toast.success('Text updated');
+        }
+      })
+    }
+  } 
 
   useEffect(() => {
     dispatch(fetchBlogs())
       .unwrap()
-      .then((response: BlogsData[]) => {
+      .then((response) => {
         const filteredBlog = response.find(blogs => blogs.id === id);
         setFilteredBlog(filteredBlog)
       })
   }, [dispatch]);
+
+  useEffect(() => {
+    setFilteredBlog(blogs.find(blogs => blogs.id === id));
+  },[blogs])
 
   if (loading) return <p>Loading...</p>;
   if (!filteredBlog) return <p>Blog not found. <button onClick={() => navigate(-1)} className="underline text-blue-600">Back</button></p>;
@@ -28,14 +108,64 @@ export const BlogDetails = () => {
   return (
     <div className='flex flex-col items-center'>
       <div className="w-full xs:w-3/4 lg:w-2/4 p-6 box-border overflow-hidden">
-        <h1 className="text-3xl font-bold mb-6">{filteredBlog.title}</h1>
-        <p className="text-gray-700 whitespace-pre-wrap break-words">{filteredBlog.text}</p>
-        <ButtonPrimary 
-          onClick={() => navigate(-1)}
-          className='mt-5'
-        >
-          Back
-        </ButtonPrimary>
+        {isEditTitle 
+          ? <form onSubmit={handleSubmitTitleEdit(handleFetchEditTitle)} className='mb-6 relative'>
+              <input 
+                {...registerTitleEdit('title')}
+                placeholder="Edit title..."
+                className={`w-full focus:outline-0 px-3 py-2 border border-gray-400 rounded-2xl resize-none focus:outline-none`}
+              />
+              <div className='absolute flex gap-2 h-full bottom-0 right-4'>
+                <ButtonImage  onClick={handleToggleEditTitle}>
+                  <XCircleIcon className="h-6 w-6" />
+                </ButtonImage>
+                <ButtonImage type='submit'>
+                  <BookmarkIcon className="h-6 w-6" />
+                </ButtonImage>
+              </div>
+            </form>
+          : <div className='flex items-center mb-6 gap-2'>
+              <h1 className="text-3xl font-bold">{filteredBlog.title}</h1>
+                <ButtonImage onClick={handleEditTitle}>
+                  <PencilIcon className="h-6 w-6" />
+                </ButtonImage>
+            </div> 
+        }
+        {isEditText 
+          ? <div className='relative w-full h-full'>
+              <form onSubmit={handleSubmitTextEdit(handleFetchEditText)}>
+                <textarea
+                  {...registerTextEdit('text')}
+                  rows={5}
+                  placeholder="Edit comment..."
+                  className={`w-full focus:outline-0 p-3 border border-gray-400 rounded-2xl resize-none focus:outline-none`}
+                  disabled={loading}
+                />
+                <div className='absolute flex gap-4 bottom-4 right-6'>
+                  <ButtonImage 
+                    onClick={handleToggleEditText}
+                    disabled={loading} 
+                    className='mt-5'
+                  >
+                    <XCircleIcon className="h-6 w-6" />
+                  </ButtonImage>
+                  <ButtonImage 
+                    type='submit'
+                    disabled={loading} 
+                    className='mt-5'
+                  >
+                    <BookmarkIcon className="h-6 w-6" />
+                  </ButtonImage>
+                </div>
+              </form>
+            </div>
+          : <div className='flex gap-2'>
+              <p className="text-gray-700 whitespace-pre-wrap break-words">{filteredBlog.text}</p>
+              <ButtonImage onClick={handleEditText} className='w-fit h-fit'>
+                <PencilIcon className="h-6 w-6" />
+              </ButtonImage>
+            </div>
+        }
       </div>
       <div className='w-full xs:w-3/4 lg:w-2/4'>
         <BlogComments blogId={id as string} />
@@ -43,3 +173,5 @@ export const BlogDetails = () => {
     </div>
   );
 };
+
+
