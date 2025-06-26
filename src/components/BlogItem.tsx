@@ -29,19 +29,11 @@ export const BlogItem = ({ blogData }: IProps) => {
       to={`/blogs/${blogData.id}`}
       className="relative block w-68 h-48 p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
     >
-      <div>
-        <h3 className="text-lg font-semibold mb-2 line-clamp-2">{blogData.title}</h3>
-        <p
-          className="text-gray-600 text-sm line-clamp-4"
-          style={{
-            display: '-webkit-box',
-            WebkitLineClamp: 4,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
-        >
+      <div className='flex flex-col gap-4'>
+        <h3 className="max-w-full w-10/12 text-lg font-semibold line-clamp-4">{blogData.title}</h3>
+        <div className="text-gray-600 text-sm line-clamp-5">
           {blogData.text}
-        </p>
+        </div>
       </div>
       <div className='absolute top-0 right-0'>
         <ButtonPrimary 
