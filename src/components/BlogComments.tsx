@@ -79,18 +79,15 @@ export const BlogComments = ({
   const handleEditComment = async (data: CommentFormData) => {
     if(!selectedComment) return;
 
-    await dispatch(updateComment({ 
-      blogId, 
-      commentId: selectedComment.id,
-      text: data.text
-    })).then((response) => {
-      if(response) {
-        toast.success('Comment updated');
-        setSelectedComment(undefined);
-        resetEdit();
-      };
-    })
-    await dispatch(fetchCommentsByBlogId(blogId));
+    try {
+      await dispatch(updateComment({ blogId, commentId: selectedComment.id, text: data.text})).unwrap();
+      toast.success('Comment updated');
+      setSelectedComment(undefined);
+      resetEdit();
+      await dispatch(fetchCommentsByBlogId(blogId));
+    } catch (error) {
+      toast.error('Updated failed');
+    }
   }
 
   const handleCancelEditComment = () => {
