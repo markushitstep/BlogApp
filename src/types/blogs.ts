@@ -5,4 +5,5 @@ export interface BlogsData {
   title: string;
   text: string;
   comments?: CommentData[];
+  createdAt?: Date;
 }

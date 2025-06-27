@@ -28,14 +28,6 @@ const postsSlice = createSlice({
         state.blogs = action.payload;
       }
     );
-    ///ADD BLOGS
-    attachSimpleThunk<PostsState, any, Omit<BlogsData, 'id'>>(
-      builder,
-      addBlog,
-      (state, action) => {
-        state.blogs = action.payload;
-      }
-    );
     ///UPDATE TITLE BLOG
     attachSimpleThunk<PostsState,{ blogId: string, title: string}, IUpdateTitleProps>(
       builder,

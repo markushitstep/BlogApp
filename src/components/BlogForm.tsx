@@ -32,8 +32,8 @@ export const BlogForm = () => {
   const onSubmit = (data: BlogFormData) => {
     dispatch(addBlog(data)).then((res) => {
       if (addBlog.fulfilled.match(res)) {
-        navigate('/blogs');
         reset();
+        navigate('/blogs');
       }
     });
   };
