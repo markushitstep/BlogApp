@@ -27,65 +27,52 @@ export const BlogDetails = () => {
   const dispatch = useAppDispatch();
   const { loading, blogs } = useAppSelector(state => state.blogs);
   const [filteredBlog, setFilteredBlog] = useState<BlogsData>();
-  const [isEditTitle, setIsEditTitle] = useState(false);
-  const [isEditText, setIsEditText] = useState(false);
+  const [isEditMode, setIsEditMode] = useState({ title: false, text: false});
 
   const {
-    register: registerTitleEdit,
-    handleSubmit: handleSubmitTitleEdit,
-    setValue: setValueTitleEdit,
-    formState: { errors: errorsTitleEdit },
+    register: registerTitle,
+    handleSubmit: handleSubmitTitle,
+    setValue: setValueTitle,
   } = useForm<BlogTitleData>({
     resolver: zodResolver(blogTitleSchema),
   });
 
   const {
-    register: registerTextEdit,
-    handleSubmit: handleSubmitTextEdit,
-    setValue: setValueTextEdit,
-    formState: { errors: errorsTextEdit },
+    register: registerText,
+    handleSubmit: handleSubmitText,
+    setValue: setValueText,
   } = useForm<BlogTextData>({
     resolver: zodResolver(blogTextSchema),
   });
-
-  const handleToggleEditTitle = () => setIsEditTitle(!isEditTitle);
-  const handleToggleEditText = () => setIsEditText(!isEditText);
   
-  const handleEditTitle = () => {
+  const handleToggleEdit = (field: 'title' | 'text') => {
+    setIsEditMode(prev => ({...prev, [field]: !prev[field]}));
     if(filteredBlog){
-      handleToggleEditTitle();
-      setValueTitleEdit('title', filteredBlog?.title);
+      field === 'title'
+        ? setValueTitle(field, filteredBlog.title)
+        : setValueText(field, filteredBlog.text)
     }
   }
 
-  const handleEditText = () => {
-    if(filteredBlog){
-      handleToggleEditText();
-      setValueTextEdit('text', filteredBlog?.text);
-    }
-  }
+  const handleFetchUpdate = async (field: 'title' | 'text', value: string) => {
+    if(!id) return;
 
-  const handleFetchEditTitle = async (data: BlogTitleData) => {
-    if(id){
-      const { title } = data;
-      await dispatch(updateTitleBlog({ blogId: id, title })).then((response) => {
-        if(response){
-          handleToggleEditTitle();
-          toast.success('Title updated');
-        }
-      })
-    }
-  } 
-
-  const handleFetchEditText = async (data: BlogTextData) => {
-    if(id){
-      const { text } = data;
-      await dispatch(updateTextBlog({ blogId: id, text })).then((response) => {
-        if(response){
-          handleToggleEditText();
-          toast.success('Text updated');
-        }
-      })
+    if(field === 'title') {
+      try {
+        await dispatch(updateTitleBlog({ blogId: id, title: value })).unwrap();
+        toast.success('Title was updated');
+        handleToggleEdit(field);
+      } catch (error) {
+        toast.error('Update failed');
+      }
+    } else {
+      try {
+        await dispatch(updateTextBlog({ blogId: id, text: value })).unwrap();
+        toast.success('Text was updated');
+        handleToggleEdit(field);
+      } catch (error) {
+        toast.error('Update failed');
+      }
     }
   } 
 
@@ -108,15 +95,15 @@ export const BlogDetails = () => {
   return (
     <div className='flex flex-col items-center'>
       <div className="w-full xs:w-3/4 lg:w-2/4 p-6 box-border overflow-hidden">
-        {isEditTitle 
-          ? <form onSubmit={handleSubmitTitleEdit(handleFetchEditTitle)} className='mb-6 relative'>
+        {isEditMode.title 
+          ? <form onSubmit={handleSubmitTitle(data => handleFetchUpdate('title', data.title))} className='mb-6 relative'>
               <input 
-                {...registerTitleEdit('title')}
+                {...registerTitle('title')}
                 placeholder="Edit title..."
                 className={`w-full focus:outline-0 px-3 py-2 border border-gray-400 rounded-2xl resize-none focus:outline-none`}
               />
               <div className='absolute flex gap-2 h-full bottom-0 right-4'>
-                <ButtonImage  onClick={handleToggleEditTitle}>
+                <ButtonImage  onClick={() => handleToggleEdit('title')}>
                   <XCircleIcon className="h-6 w-6" />
                 </ButtonImage>
                 <ButtonImage type='submit'>
@@ -126,16 +113,16 @@ export const BlogDetails = () => {
             </form>
           : <div className='flex items-center mb-6 gap-2'>
               <h1 className="text-3xl font-bold">{filteredBlog.title}</h1>
-                <ButtonImage onClick={handleEditTitle}>
+                <ButtonImage onClick={() => handleToggleEdit('title')}>
                   <PencilIcon className="h-6 w-6" />
                 </ButtonImage>
             </div> 
         }
-        {isEditText 
+        {isEditMode.text 
           ? <div className='relative w-full h-full'>
-              <form onSubmit={handleSubmitTextEdit(handleFetchEditText)}>
+              <form onSubmit={handleSubmitText(data => handleFetchUpdate('text', data.text))}>
                 <textarea
-                  {...registerTextEdit('text')}
+                  {...registerText('text')}
                   rows={5}
                   placeholder="Edit comment..."
                   className={`w-full focus:outline-0 p-3 border border-gray-400 rounded-2xl resize-none focus:outline-none`}
@@ -143,7 +130,7 @@ export const BlogDetails = () => {
                 />
                 <div className='absolute flex gap-4 bottom-4 right-6'>
                   <ButtonImage 
-                    onClick={handleToggleEditText}
+                    onClick={() => handleToggleEdit('text')}
                     disabled={loading} 
                     className='mt-5'
                   >
@@ -161,7 +148,7 @@ export const BlogDetails = () => {
             </div>
           : <div className='flex gap-2'>
               <p className="text-gray-700 whitespace-pre-wrap break-words">{filteredBlog.text}</p>
-              <ButtonImage onClick={handleEditText} className='w-fit h-fit'>
+              <ButtonImage onClick={() => handleToggleEdit('text')} className='w-fit h-fit'>
                 <PencilIcon className="h-6 w-6" />
               </ButtonImage>
             </div>
