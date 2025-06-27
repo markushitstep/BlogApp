@@ -4,8 +4,8 @@ import { db } from '../../firebaseConfig';
 import { BlogsData } from '../../types/blogs';
 
 export const fetchBlogs = createAsyncThunk('blogs/fetchBlog', async () => {
-  const postsCol = collection(db, 'blogs');
-  const blogsData = await getDocs(postsCol);
+  const blogsCol = collection(db, 'blogs');
+  const blogsData = await getDocs(query(blogsCol, orderBy('createdAt', 'asc')));
 
    const blogsWithComments = await Promise.all(
     blogsData.docs.map(async (doc) => {
@@ -31,12 +31,12 @@ export const fetchBlogs = createAsyncThunk('blogs/fetchBlog', async () => {
   return blogsWithComments as BlogsData[];
 });
 
-export const addBlog = createAsyncThunk(
+export const addBlog = createAsyncThunk<BlogsData, Omit<BlogsData, 'id'>>(
   'blogs/add',
   async (blog: Omit<BlogsData, 'id'>) => {
     const blogCol = collection(db, 'blogs');
-    const blogData = await addDoc(blogCol, blog);
-    return { id: blogData.id, ...blog };
+    const blogData = await addDoc(blogCol, { ...blog, createdAt: serverTimestamp() });
+    return { id: blogData.id, ...blog, createdAt: new Date() };
   },
 );
 
