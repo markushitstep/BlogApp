@@ -1,46 +1,55 @@
-# Getting Started with Create React App
+# KitGlobal - Blog App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple blog application built as a test assignment. It allows users to add, edit, and delete blog posts, as well as leave, edit, and remove comments. All data is stored in **Firebase**. The app is built using **React**, **Redux Toolkit**, **TypeScript**, **Zod**, **React Hook Form**, and **Tailwind CSS**.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+- 🔥 Firebase integration
+- 📝 View list of blog posts
+- ➕ Create new blog post with validation (Zod + React Hook Form)
+- ✏️ Edit and delete blog posts
+- 📄 Navigate to a blog details page with comments
+- 💬 Add comments with validation
+- 🗑️ Edit and delete comments
+- ⚙️ Global state management using Redux Toolkit
+- 💅 Styled with Tailwind CSS
+- ✅ Fully typed with TypeScript
 
-### `npm start`
+## 🛠️ Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **React 19**
+- **TypeScript**
+- **Firebase**
+- **Redux Toolkit (RTK)**
+- **React Router DOM**
+- **Zod** for schema validation
+- **React Hook Form**
+- **Tailwind CSS**
+- **React Toastify** for notifications
+- **Jest + React Testing Library** for testing
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 📦 Installation
 
-### `npm test`
+1. Clone the repository: 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+git clone https://github.com/your-username/blog.git
+cd blog
 
-### `npm run build`
+2. Install dependencies:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+npm install
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Create .env file in the root and add your Firebase configuration:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+VITE_FIREBASE_PROJECT_ID=...
+VITE_FIREBASE_STORAGE_BUCKET=...
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
 
-### `npm run eject`
+4. Start the development server:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+npm start
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
