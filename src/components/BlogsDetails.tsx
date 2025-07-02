@@ -94,7 +94,7 @@ export const BlogDetails = () => {
 
   return (
     <div className='flex flex-col items-center'>
-      <div className="w-full xs:w-3/4 lg:w-2/4 p-6 box-border overflow-hidden">
+      <div className="w-full xs:w-3/4 lg:w-2/4 p-6">
         {isEditMode.title 
           ? <form onSubmit={handleSubmitTitle(data => handleFetchUpdate('title', data.title))} className='mb-6 relative'>
               <input 
@@ -112,7 +112,7 @@ export const BlogDetails = () => {
               </div>
             </form>
           : <div className='flex items-center mb-6 gap-2'>
-              <h1 className="text-3xl font-bold">{filteredBlog.title}</h1>
+              <h1 className="text-3xl font-bold break-all max-w-full line-clamp-1">{filteredBlog.title}</h1>
                 <ButtonImage onClick={() => handleToggleEdit('title')}>
                   <PencilIcon className="h-6 w-6" />
                 </ButtonImage>
@@ -146,8 +146,8 @@ export const BlogDetails = () => {
                 </div>
               </form>
             </div>
-          : <div className='flex gap-2'>
-              <p className="text-gray-700 whitespace-pre-wrap break-words">{filteredBlog.text}</p>
+          : <div className='flex h-full gap-2'>
+              <p className="text-gray-700 h-full break-all line-clamp-4">{filteredBlog.text}</p>
               <ButtonImage onClick={() => handleToggleEdit('text')} className='w-fit h-fit'>
                 <PencilIcon className="h-6 w-6" />
               </ButtonImage>
